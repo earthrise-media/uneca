@@ -1,0 +1,10 @@
+scipy
+streamlit
+numpy
+pandas
+altair
+geopandas
+matplotlib
+descartes
+statsmodels
+plotly
