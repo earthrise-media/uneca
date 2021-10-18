@@ -1,0 +1,10 @@
+{
+  "name": "data_processing",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Tom MacWright",
+  "license": "MIT",
+  "dependencies": {
+    "d3-dsv": "^2.0.0"
+  }
+}

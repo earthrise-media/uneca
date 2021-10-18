@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>UNECA</title>
+    <style></style>
+    <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <link href="site.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300,700&display=swap" rel="stylesheet">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js"></script>
+  </head>
+  <body>
+    <div id=map></div>
+    <div id=sidebar>
+      <h2>
+        Climate Action 
+      </h2>
+      <h3>
+        Platform Africa 
+      </h3>
+
+      <h4>
+        Nature-based Carbon Removal
+      </h4>
+
+      <label style='margin-top:20px; display: block;'>
+        <div style='padding-bottom:10px;text-align:center;font-size:16px;'>
+          Set Carbon Price
+        </div>
+        <input id=price-slider value=10 type='range' min=10 max=120 step=10 />
+      </label>
+
+      <h5>
+        Environmental benefit
+      </h5>
+
+      <div id=benefits>
+        <input name=benefit value=Jobs type="radio" checked id=r-job>
+        <label for="r-job">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          Jobs
+        </label>
+        <input name=benefit value="TgCO2e/year" type="radio" id=r-seq>
+        <label for="r-seq">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+          </svg>
+          Sequestration
+        </label>
+        <input name=benefit value=USD type="radio" id=r-rev>
+        <label for="r-rev">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Revenue
+        </label>
+      </div>
+      <h5>
+        Pathway
+      </h5>
+      <div id=pathways>
+        <input name=pathway value="manage" type="radio" id=r-protect checked>
+        <label for="r-protect">
+          Protect
+        </label>
+        <input name=pathway value="manage" type="radio" id=r-restore>
+        <label for="r-restore">
+          Restore
+        </label>
+        <input name=pathway value="manage" type="radio" id=r-manage>
+        <label for="r-manage">
+          Manage
+        </label>
+        <input name=pathway value=total type="radio" id=r-total>
+        <label for="r-total">
+          Total
+        </label>
+      </div>
+    </div>
+    <div id=countrywide>
+      <div style='font-size:24px;font-weight:700;padding-bottom:5px;' id=total>
+      </div>
+      <div style='font-size:18px;font-weight:700;padding-bottom:5px;' id=total-unit>
+      </div>
+      <div style='font-size:14px;font-weight:700;text-transform:uppercase;'>
+        Continental total
+      </div>
+    </div>
+    <div id=legend>
+      <canvas id=ramp width=150 height=20></canvas>
+      <div style="display: flex; justify-content:space-between;align-items:center;color:#fff;font-size:10px;">
+        <div id=ramp-1>0</div>
+        <div id=ramp-2>0</div>
+      </div>
+    </div>
+    <script src='site.js'></script>
+  </body>
+</html>
