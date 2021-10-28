@@ -7,6 +7,7 @@ const UNITS = [
   "TgCO2e/year/sq-km",
 ];
 
+
 function updatePrice(price) {
   const bg = `<svg  xmlns='http://www.w3.org/2000/svg' width="80" height="80">
   <rect width="80" height="80" fill="#000" />
