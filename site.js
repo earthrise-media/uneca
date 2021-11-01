@@ -7,7 +7,6 @@ const UNITS = [
   "TgCO2e/year/sq-km",
 ];
 
-
 function updatePrice(price) {
   const bg = `<svg  xmlns='http://www.w3.org/2000/svg' width="80" height="80">
   <rect width="80" height="80" fill="#000" />
@@ -129,10 +128,66 @@ fetch("./output.json")
           "source-layer": "country_boundaries",
           paint: {
             "fill-color": "#eee",
-            "fill-opacity": 0.8,
+            "fill-opacity": [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              4.5,
+              0.8,
+              5,
+              0.1,
+            ],
           },
         },
         "admin-1-boundary-bg"
+      );
+
+      map.addSource("subdivisions", {
+        type: "geojson",
+        data: "./countries-6.geojson",
+      });
+
+      map.addLayer(
+        {
+          id: "subdivisions",
+          type: "fill",
+          source: "subdivisions",
+          paint: {
+            "fill-color": "#eee",
+            "fill-opacity": [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              4.5,
+              0,
+              5,
+              0.8,
+            ],
+          },
+        },
+        "countries-join"
+      );
+
+      map.addLayer(
+        {
+          id: "subdivisions-line",
+          type: "line",
+          source: "subdivisions",
+          paint: {
+            "line-color": "#000",
+            "line-width": 2,
+            "line-opacity": [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              4.5,
+              0,
+              5,
+              0.8,
+            ],
+          },
+        },
+        "countries-join"
       );
 
       const popup = new mapboxgl.Popup({
@@ -142,6 +197,7 @@ fetch("./output.json")
 
       map.on("mousemove", "countries-join", (e) => {
         const coordinates = e.lngLat;
+        if (map.getZoom() > 6) return;
 
         const val = data.find((row) => {
           return (
@@ -169,6 +225,73 @@ fetch("./output.json")
             </div>
             <div style='font-size:13;font-weight:700;padding-top:5px;'>
               Pathway: ${pathway.toUpperCase()}
+            </div>
+          </div>
+        `
+          )
+          .addTo(map);
+      });
+
+      map.on("mousemove", "subdivisions", (e) => {
+        const coordinates = e.lngLat;
+
+        console.log(map.getZoom());
+        if (map.getZoom() < 6) return;
+
+        const props = e.features[0].properties;
+
+        document.querySelector("#countrywide").style.opacity = 0;
+
+        const rows = Object.entries(props)
+          .map(([key, val]) => {
+            const category = key.match(/^([A-Z]+\s)*/);
+            if (!category || !category[0]) return;
+            const title = key.substring(category[0].length);
+            return { category: category[0], title, val };
+          })
+          .filter(Boolean);
+
+        const groups = {};
+
+        for (let { category, title, val } of rows) {
+          if (!groups[category]) {
+            groups[category] = [];
+          }
+          groups[category].push({ title, val });
+        }
+
+        popup
+          .setLngLat(coordinates)
+          .setHTML(
+            `
+          <div>
+            <div style='font-size:14px;'>
+            </div>
+
+            <div style='padding-top:5px;'>
+              ${Object.entries(groups)
+                .map(([group, statistics]) => {
+                  return `
+                  <div style="font-size:12px;font-weight:700px;">${group}</div>
+                    <table style="width:100%;font-size:10px;">
+                    ${statistics
+                      .map((stats) => {
+                        return `
+                        <tr>
+                        <td style="padding:0;">
+                          ${stats.title}: 
+                        </td>
+                        <td style='padding:0;text-align:right;">
+                          ${intl.format(stats.val)}
+                        </td>
+                        </tr>
+                      `;
+                      })
+                      .join("")}
+                    </table>
+                `;
+                })
+                .join("")}
             </div>
           </div>
         `
